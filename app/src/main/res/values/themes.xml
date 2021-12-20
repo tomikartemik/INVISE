@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.INVISE" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#ffffff</item>
+        <item name="colorPrimaryVariant">#353535</item>
+        <item name="colorOnPrimary">#353535</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#353535</item>
+        <item name="colorSecondaryVariant">#353535</item>
+        <item name="colorOnSecondary">#4F4F4F</item>
+        <item name="colorAccent">#353535</item>
+        <item name="colorPrimaryDark">#353535</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
