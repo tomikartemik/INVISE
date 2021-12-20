@@ -9,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 lateinit var binding: ActivityMainBinding
 lateinit var auth: FirebaseAuth
@@ -19,37 +21,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        auth = FirebaseAuth.getInstance()
-
         binding.btn.setOnClickListener {
-            val editName = binding.editTextName.text.toString()
-            if(editName != ""){
-                registerUser(editName, "0")
-            }else{
+            val et = binding.editTextName.text.toString()
+            if(et == "") {
                 Toast.makeText(this, "Вы не ввели имя", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-    private fun registerUser(email:String, password:String){
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this){
-                if(it.isSuccessful){
-                    val user: FirebaseUser? = auth.currentUser
-                    val userId: String = user!!.uid
-
-                    databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
-
-                    val hashMap:HashMap<String, String> = HashMap()
-                    hashMap.put("userId", userId)
-                    hashMap.put("username", email)
-
-                    databaseReference.setValue(hashMap).addOnCompleteListener(this){
-                        if(it.isSuccessful){
-                            startActivity(Intent(this, HomeActivity::class.java))
-                        }
-                    }
-                }
+            else{
+                database()
+                startActivity(Intent(this, HomeActivity::class.java))
             }
+            }
+        }
+
+    }
+    fun database(){
+        val database = Firebase.database
+        val myRef = database.getReference("message")
+
+        myRef.setValue("Hello, World!")
     }
 }
