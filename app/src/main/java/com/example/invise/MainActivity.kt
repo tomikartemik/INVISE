@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        if(pref.getString("Id", "")!=""){
-            startActivity(Intent(this, HomeActivity::class.java))
-        }
         val auth = FirebaseAuth.getInstance()
         pref = getSharedPreferences("user_info", MODE_PRIVATE)
         binding.suBtn.setOnClickListener {
