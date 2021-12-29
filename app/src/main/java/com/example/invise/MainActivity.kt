@@ -1,6 +1,7 @@
 package com.example.invise
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import kotlin.properties.Delegates
 lateinit var binding: ActivityMainBinding
 lateinit var databaseReference: DatabaseReference
 lateinit var message: String
+lateinit var pref: SharedPreferences
 var ide by Delegates.notNull<Int>()
 var id by Delegates.notNull<Int>()
 var tid by Delegates.notNull<Int>()
@@ -25,9 +27,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if(pref.getString("Id", "")!=""){
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
         val auth = FirebaseAuth.getInstance()
-        val database = FirebaseDatabase.getInstance()
-        val databaseReference = database?.reference!!.child("profile")
+        pref = getSharedPreferences("user_info", MODE_PRIVATE)
         binding.suBtn.setOnClickListener {
             val ename = binding.editTextName.text.toString()
             val epass = binding.editTextPass.toString()
@@ -45,8 +49,16 @@ class MainActivity : AppCompatActivity() {
                         .addOnCompleteListener {
                             if(it.isSuccessful){
                                 val currentUser = auth.currentUser
-                                Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, it.result!!.user!!.uid , Toast.LENGTH_SHORT).show()
+                                val editor = pref.edit()
+                                editor.remove("Name")
+                                editor.remove("Id")
+                                editor.apply()
+                                editor.putString("Name", ename)
+                                editor.putString("Id", it.result!!.user!!.uid)
+                                editor.apply()
                                 startActivity(Intent(this, HomeActivity::class.java))
+                                finish()
                             }else{
                                 Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
                             }
@@ -65,12 +77,17 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 auth.signInWithEmailAndPassword(ename+"@gmail.com", epass)
-                        .addOnCompleteListener {
-                            if (it.isSuccessful){
-                                Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("Login", "signInWithEmail:success")
+                                val user = auth.currentUser
                                 startActivity(Intent(this, HomeActivity::class.java))
-                            }else{
-                                Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("login", "signInWithEmail:failure", task.exception)
+                                Toast.makeText(baseContext, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show()
                             }
                         }
             }
