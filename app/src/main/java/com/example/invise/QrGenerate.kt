@@ -9,6 +9,9 @@ import android.util.Base64
 import java.util.Base64.getEncoder
 import javax.crypto.spec.SecretKeySpec
 import android.R.raw
+import androidmads.library.qrgenearator.QRGContents
+import androidmads.library.qrgenearator.QRGEncoder
+import com.google.zxing.WriterException
 import java.util.Base64.getDecoder
 
 
@@ -22,8 +25,12 @@ class QrGenerate : AppCompatActivity() {
         keyGen.init(1048576)
         val symkey: SecretKey = keyGen.generateKey()
         binding.textView2.text =symkey.toString()
+        val qr = QRGEncoder(symkey.toString(), null, QRGContents.Type.TEXT, 200)
+        try{
+            val bMap = qr.bitmap
+            binding.yourqr.setImageBitmap(bMap)
+        }catch (e: WriterException){
 
-
-
+        }
     }
 }

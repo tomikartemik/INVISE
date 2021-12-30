@@ -21,7 +21,7 @@ class qrFragment : Fragment() {
         }
         return binding.root
     }
-
+    
     companion object {
         @JvmStatic
         fun newInstance() = qrFragment()
