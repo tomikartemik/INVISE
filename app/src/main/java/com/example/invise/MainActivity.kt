@@ -14,6 +14,7 @@ import kotlin.properties.Delegates
 
 
 lateinit var binding: ActivityMainBinding
+lateinit var auth : FirebaseAuth
 lateinit var databaseReference: DatabaseReference
 lateinit var message: String
 lateinit var pref: SharedPreferences
@@ -27,11 +28,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val auth = FirebaseAuth.getInstance()
         pref = getSharedPreferences("user_info", MODE_PRIVATE)
         binding.suBtn.setOnClickListener {
+            auth = FirebaseAuth.getInstance()
             val ename = binding.editTextName.text.toString()
-            val epass = binding.editTextPass.toString()
+            val epass = binding.editTextPass.text.toString()
             if(ename == "") {
                 Toast.makeText(this , "Вы не ввели имя" , Toast.LENGTH_SHORT).show()
             }
@@ -46,16 +47,17 @@ class MainActivity : AppCompatActivity() {
                         .addOnCompleteListener {
                             if(it.isSuccessful){
                                 val currentUser = auth.currentUser
-                                Toast.makeText(this, it.result!!.user!!.uid , Toast.LENGTH_SHORT).show()
-                                val editor = pref.edit()
-                                editor.remove("Name")
-                                editor.remove("Id")
-                                editor.apply()
-                                editor.putString("Name", ename)
-                                editor.putString("Id", it.result!!.user!!.uid)
-                                editor.apply()
-                                startActivity(Intent(this, HomeActivity::class.java))
-                                finish()
+                                val userId:String = currentUser!!.uid
+                                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+                                var hashMap:HashMap<String, String> = HashMap()
+                                hashMap.put("userId", userId)
+                                hashMap.put("username", ename)
+                                databaseReference.setValue(hashMap).addOnCompleteListener(this){
+                                    if (it.isSuccessful){
+                                        Toast.makeText(this, userId , Toast.LENGTH_SHORT).show()
+                                        startActivity(Intent(this, HomeActivity::class.java))
+                                    }
+                                }
                             }else{
                                 Toast.makeText(this, "Try again!", Toast.LENGTH_SHORT).show()
                             }
@@ -64,8 +66,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         binding.siBtn.setOnClickListener {
+            auth = FirebaseAuth.getInstance()
             val ename = binding.editTextName.text.toString()
-            val epass = binding.editTextPass.toString()
+            val epass = binding.editTextPass.text.toString()
             if(ename == "") {
                 Toast.makeText(this , "Вы не ввели имя" , Toast.LENGTH_SHORT).show()
             }
@@ -74,17 +77,14 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 auth.signInWithEmailAndPassword(ename+"@gmail.com", epass)
-                        .addOnCompleteListener(this) { task ->
-                            if (task.isSuccessful) {
+                        .addOnCompleteListener(this) {
+                            if (it.isSuccessful) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("Login", "signInWithEmail:success")
-                                val user = auth.currentUser
                                 startActivity(Intent(this, HomeActivity::class.java))
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Log.w("login", "signInWithEmail:failure", task.exception)
-                                Toast.makeText(baseContext, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show()
+                                Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                             }
                         }
             }
