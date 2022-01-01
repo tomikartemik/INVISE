@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         pref = getSharedPreferences("user_info", MODE_PRIVATE)
+        if (pref.getString("Name", null)?.toString() != null){
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+
+        }
         binding.suBtn.setOnClickListener {
             auth = FirebaseAuth.getInstance()
             val ename = binding.editTextName.text.toString()
@@ -56,6 +61,13 @@ class MainActivity : AppCompatActivity() {
                                     if (it.isSuccessful){
                                         Toast.makeText(this, userId , Toast.LENGTH_SHORT).show()
                                         startActivity(Intent(this, HomeActivity::class.java))
+                                        val creator = pref.edit()
+                                        creator.putString("Name", ename)
+                                        creator.putString("UserId", userId)
+                                        creator.apply()
+                                        Log.d("Name", pref.getString("Name", null).toString())
+                                        Log.d("UserId", pref.getString("UserId", null).toString())
+                                        finish()
                                     }
                                 }
                             }else{
@@ -82,6 +94,15 @@ class MainActivity : AppCompatActivity() {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d("Login", "signInWithEmail:success")
                                 startActivity(Intent(this, HomeActivity::class.java))
+                                val currentUser = auth.currentUser
+                                val userId:String = currentUser!!.uid
+                                val creator = pref.edit()
+                                creator.putString("Name", ename)
+                                creator.putString("UserId", userId)
+                                creator.apply()
+                                Log.d("Name", pref.getString("Name", null).toString())
+                                Log.d("UserId", pref.getString("UserId", null).toString())
+                                finish()
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()

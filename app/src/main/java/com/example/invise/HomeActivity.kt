@@ -13,7 +13,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bin = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(bin.root)
-        bin.textView.text = pref.getString("Name", "00")
         supportFragmentManager.beginTransaction().replace(R.id.frame, chatsFragment.newInstance()).commit()
         bin.btmNav.setOnNavigationItemSelectedListener {
             when(it.itemId){
