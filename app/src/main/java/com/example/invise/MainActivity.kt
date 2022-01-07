@@ -1,15 +1,18 @@
 package com.example.invise
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.nfc.Tag
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.invise.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.FirebaseCommonKtxRegistrar
 import kotlin.properties.Delegates
 
 
@@ -32,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         if (pref.getString("Name", null)?.toString() != null){
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
-
         }
         binding.suBtn.setOnClickListener {
             auth = FirebaseAuth.getInstance()
@@ -111,7 +113,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         }
-
     }
 /////////////    fun database(name : String){
 /////////////        val ref = FirebaseDatabase.getInstance().reference.child("Users").child(name).push()
