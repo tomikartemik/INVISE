@@ -1,11 +1,15 @@
 package com.example.invise
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 
@@ -37,6 +41,12 @@ class UserAdapter(private val context : FragmentActivity? , private val userList
         holder.txtUserName.text = user.username
         holder.txtUserName.setTextColor(color)
         holder.avatar.setColorFilter(color)
+        holder.layoutUser.setOnClickListener {
+            val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("userId", user.userId)
+            intent.putExtra("username", user.username)
+            context!!.startActivity(intent)
+        }
     }
 
     override fun getItemCount() : Int {
@@ -46,5 +56,6 @@ class UserAdapter(private val context : FragmentActivity? , private val userList
         val txtUserName:TextView = view.findViewById(R.id.name)
         val avatar:ImageView = view.findViewById(R.id.avatar)
         val txtMsg:TextView = view.findViewById(R.id.name)
+        val layoutUser: ConstraintLayout = view.findViewById(R.id.layoutUser)
     }
 }
