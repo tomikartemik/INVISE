@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/name_on_top" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/chat_recycle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
