@@ -19,7 +19,9 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding_chat = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding_chat.root)
-        binding_chat.chatRecycle.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        var llm = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        llm.stackFromEnd = true
+        binding_chat.chatRecycle.layoutManager = llm
 
         var back_btn: ImageView = findViewById(R.id.back)
         back_btn.setOnClickListener {
