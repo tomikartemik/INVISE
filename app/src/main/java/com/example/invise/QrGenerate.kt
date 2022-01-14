@@ -12,6 +12,7 @@ import android.R.raw
 import androidmads.library.qrgenearator.QRGContents
 import androidmads.library.qrgenearator.QRGEncoder
 import com.google.zxing.WriterException
+import java.util.*
 import java.util.Base64.getDecoder
 
 
@@ -24,6 +25,7 @@ class QrGenerate : AppCompatActivity() {
         val keyGen: KeyGenerator = KeyGenerator.getInstance("AES")
         keyGen.init(1048576)
         val symkey: SecretKey = keyGen.generateKey()
+        val randomString = UUID.randomUUID().toString().substring(0,15)
         binding.textView2.text =symkey.toString()
         val qr = QRGEncoder(symkey.toString(), null, QRGContents.Type.TEXT, 200)
         try{

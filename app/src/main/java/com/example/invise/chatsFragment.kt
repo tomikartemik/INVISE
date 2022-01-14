@@ -2,6 +2,7 @@ package com.example.invise
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,16 @@ class chatsFragment : Fragment() {
         ////////
         val firebase: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        ////////////////Реализация друзей/////////////////////
+        ///////////////Загружать в бд нужно только один раз при сканировании qr///////////////////////////
+//        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebase.uid).child("Friends")
+//        var reference: DatabaseReference? = FirebaseDatabase.getInstance().getReference()
+//        var hashMap: HashMap<String, String> = HashMap()
+//        hashMap.put("username", "Test")
+//        hashMap.put("userId", firebase.uid)
+//
+//        reference!!.child("Users").child(firebase.uid).child("Friends").push().setValue(hashMap )
+//        Log.d("Friends", FirebaseDatabase.getInstance().getReference("Users/${firebase.uid}/friends").toString())
 
         databaseReference.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot : DataSnapshot) {
