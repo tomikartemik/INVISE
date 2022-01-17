@@ -22,12 +22,14 @@ class QrGenerate : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityQrGenerateBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.back.setOnClickListener {
+            onBackPressed()
+        }
         val keyGen: KeyGenerator = KeyGenerator.getInstance("AES")
         keyGen.init(1048576)
         val symkey: SecretKey = keyGen.generateKey()
-        val randomString = UUID.randomUUID().toString().substring(0,15)
-        binding.textView2.text =symkey.toString()
-        val qr = QRGEncoder(symkey.toString(), null, QRGContents.Type.TEXT, 200)
+        val randomString = pref.getString("UserId", null).toString() + "   " + UUID.randomUUID().toString().substring(0,15)
+        val qr = QRGEncoder(randomString.toString(), null, QRGContents.Type.TEXT, 1000)
         try{
             val bMap = qr.bitmap
             binding.yourqr.setImageBitmap(bMap)
